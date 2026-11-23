@@ -1,0 +1,20 @@
+{
+	"geode": "4.0.0",
+	"gd": {
+		"win": "2.2074",
+		"mac": "2.2074"
+	},
+	"id": "yourname.smb1-port",
+	"name": "SMB1 Port",
+	"version": "v0.1.0",
+	"developer": "yourname",
+	"description": "Runs your own dumped Super Mario Bros. ROM inside Geometry Dash using a built-in NES emulator. No ROM is included; you must supply a .nes file.",
+	"settings": {
+		"skip-crc-check": {
+			"type": "bool",
+			"name": "Skip ROM checksum",
+			"description": "Accept any NROM-256 ROM even if its CRC32 doesn't match the known SMB1 dump. Only needed if your valid dump is rejected.",
+			"default": false
+		}
+	}
+}
