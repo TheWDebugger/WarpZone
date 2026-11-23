@@ -1,4 +1,4 @@
-# SMB1 Port (Geode mod for Geometry Dash)
+# WarpZone (Geode mod for Geometry Dash)
 
 Runs the **real Super Mario Bros.** inside Geometry Dash using a built-in NES emulator.
 The mod ships **no Nintendo code or assets**. On first launch it asks for your own dumped
