@@ -5,6 +5,11 @@ The mod ships **no Nintendo code or assets**. On first launch it asks for your o
 `.nes` file, validates it (iNES header, NROM-256, CRC32 of PRG and CHR), remembers the
 path, and then executes the ROM itself. Without a valid ROM the game will not start.
 
+## Requirements
+
+Built against **Geode SDK 5.11.2 for Geometry Dash 2.2081**. You need GD 2.2081 and Geode 5.11.2
+(or newer 5.x) installed. The mod will not load on other game versions.
+
 ## Build
 
 Push this folder to GitHub and run the **Build Mod** workflow (Actions tab), or install the
