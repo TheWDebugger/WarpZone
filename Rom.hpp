@@ -3,6 +3,8 @@
 #include <array>
 #include <cstdint>
 #include <optional>
+#include <string>
+#include <filesystem>
 #include <vector>
 
 namespace smb {
@@ -62,6 +64,18 @@ struct Rom {
 inline std::optional<Rom>& romStore() {
     static std::optional<Rom> s;
     return s;
+}
+
+struct LoadResult {
+    std::optional<Rom> rom;
+    std::string error;
+};
+
+// Convenience wrapper used by main.cpp.
+inline LoadResult loadRom(std::string const& path, bool strict = true) {
+    auto res = Rom::load(path, strict);
+    if (!res) return {std::nullopt, std::string(res.unwrapErr())};
+    return {std::move(res).unwrap(), {}};
 }
 
 } // namespace smb

@@ -106,8 +106,8 @@ inline SettingNodeV3* SelfTestSetting::createNode(float width) {
     return SelfTestSettingNode::create(std::static_pointer_cast<SelfTestSetting>(shared_from_this()), width);
 }
 
-$on_mod(Loaded) {
-    (void)Mod::get()->registerCustomSettingType("test-emulator", &SelfTestSetting::parse);
-}
-
 } // namespace smb
+
+$on_mod(Loaded) {
+    (void)Mod::get()->registerCustomSettingType("test-emulator", &smb::SelfTestSetting::parse);
+}

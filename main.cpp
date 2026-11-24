@@ -29,8 +29,17 @@ class $modify(WarpMenu, MenuLayer) {
         btn->setID("warp-zone-button"_spr);
 
         if (auto* menu = this->getChildByID("bottom-menu")) {
+            spr->setScale(0.7f);
             menu->addChild(btn);
             menu->updateLayout();
+        } else {
+            // Texture-pack / other-mod layouts without a bottom-menu: put the button in its own menu.
+            auto* menu = CCMenu::create();
+            menu->setID("warp-zone-menu"_spr);
+            auto win = CCDirector::get()->getWinSize();
+            menu->setPosition({win.width / 2, 30.f});
+            menu->addChild(btn);
+            this->addChild(menu);
         }
         return true;
     }

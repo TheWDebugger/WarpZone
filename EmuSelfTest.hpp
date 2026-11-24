@@ -2,7 +2,7 @@
 // Headless emulator self-test. No Geode dependency, so it can be compiled standalone.
 // Boots the ROM, presses Start, holds Right, and checks that the picture and the game
 // state react the way SMB1 should.
-#include "nes/Nes.hpp"
+#include "Nes.hpp"
 #include <chrono>
 #include <cstdint>
 #include <set>

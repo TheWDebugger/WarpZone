@@ -1,6 +1,6 @@
 #pragma once
 #include "Rom.hpp"
-#include "nes/Nes.hpp"
+#include "Nes.hpp"
 #include <memory>
 #include <set>
 

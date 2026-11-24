@@ -1,4 +1,4 @@
-#include "../src/nes/Cpu.hpp"
+#include "Cpu.hpp"
 #include <cstdio>
 #include <cstring>
 #include <fstream>
