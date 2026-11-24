@@ -15,6 +15,11 @@
       "name": "Skip ROM checksum",
       "description": "Accept any NROM-256 ROM even if its CRC32 doesn't match the known SMB1 dump. Only needed if your valid dump is rejected.",
       "default": false
+    },
+    "test-emulator": {
+      "type": "custom:test-emulator",
+      "name": "Test emulator",
+      "description": "Boots your SMB1 ROM headlessly, presses Start, runs right, and reports whether the CPU, PPU and input behave correctly. Needs a ROM chosen via the Warp Zone button first."
     }
   }
 }
