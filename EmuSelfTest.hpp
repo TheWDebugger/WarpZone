@@ -5,6 +5,8 @@
 #include "Nes.hpp"
 #include <chrono>
 #include <cstdint>
+#include <cstdlib>
+#include <algorithm>
 #include <set>
 #include <string>
 #include <vector>
@@ -92,7 +94,12 @@ inline SelfTestResult runEmulatorSelfTest(std::vector<uint8_t> const& prg,
     r.add(hashFrame(n.framebuffer()) != beforeRun, "Picture scrolls/changes while running");
     r.add(distinctColors(n.framebuffer()) >= 3, "Gameplay frame is not blank");
 
-    // 5. Speed
+    // 5. Audio: SMB1's music/effects must have produced sound by now
+    int peak = 0;
+    for (auto v : n.apu.samples()) peak = std::max(peak, std::abs((int)v));
+    r.add(peak > 500, "Audio: APU produced sound (peak " + std::to_string(peak) + "/32767)");
+
+    // 6. Speed
     int totalFrames = 120 + 4 + 60 + 240 + 180;
     double secs = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
     double fps = secs > 0 ? totalFrames / secs : 0;

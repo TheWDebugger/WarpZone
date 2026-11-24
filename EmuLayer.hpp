@@ -1,6 +1,7 @@
 #pragma once
 #include "Rom.hpp"
 #include "Nes.hpp"
+#include "AudioOut.hpp"
 #include <memory>
 #include <set>
 
@@ -40,15 +41,28 @@ public:
         upload();
         fitScreen();
 
+        // Silence the main-menu music and start streaming the emulator's audio.
+        FMODAudioEngine::sharedEngine()->stopAllMusic(true);
+        AudioOut::get().start(static_cast<float>(Mod::get()->getSettingValue<double>("volume")));
+
         this->setKeyboardEnabled(true);
         this->scheduleUpdate();
         return true;
     }
 
     void keyDown(enumKeyCodes key, double) override {
-        if (key == KEY_Escape) { CCDirector::get()->popScene(); return; }
+        if (key == KEY_Escape) {
+            AudioOut::get().stop();
+            CCDirector::get()->popScene();
+            GameManager::sharedState()->playMenuMusic(); // bring the menu music back
+            return;
+        }
         if (key == KEY_F5) { m_nes->reset(); return; }
         m_keys.insert(key);
+    }
+    void onExit() override {
+        AudioOut::get().stop();
+        CCLayer::onExit();
     }
     void keyUp(enumKeyCodes key, double) override { m_keys.erase(key); }
 
@@ -59,6 +73,9 @@ public:
         while (m_acc >= FRAME) {
             m_nes->setButtons(buttons());
             m_nes->runFrame();
+            auto& snd = m_nes->apu.samples();
+            AudioOut::get().push(snd.data(), snd.size());
+            snd.clear();
             m_acc -= FRAME;
             ran = true;
         }

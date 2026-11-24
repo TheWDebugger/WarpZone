@@ -1,7 +1,8 @@
 #pragma once
-// NES console: CPU + PPU + mapper 0 (NROM) + controller 1. No audio yet. Pure C++.
+// NES console: CPU + PPU + mapper 0 (NROM) + controller 1. Pure C++.
 #include "Cpu.hpp"
 #include "Ppu.hpp"
+#include "Apu.hpp"
 #include <vector>
 
 namespace nes {
@@ -20,6 +21,7 @@ public:
     void reset() {
         std::fill(std::begin(ram), std::end(ram), 0);
         cpu.reset();
+        apu.reset();
         dmaStall = 0;
     }
 
@@ -37,15 +39,18 @@ public:
         else cyc = cpu.step();
         if (dmaStall) { cyc += dmaStall; cpu.cycles += dmaStall; dmaStall = 0; }
         for (int i = 0; i < cyc * 3; i++) ppu.tick();
+        apu.run(cyc);
     }
 
     Cpu cpu;
     Ppu ppu;
+    Apu apu;
 
     // ---- CPU bus ----
     uint8_t read(uint16_t a) override {
         if (a < 0x2000) return ram[a & 0x7FF];
         if (a < 0x4000) return ppu.regRead(a & 7);
+        if (a == 0x4015) return apu.readStatus();
         if (a == 0x4016) {
             uint8_t r = shift & 1;
             if (strobe) shift = buttons; else shift = (shift >> 1) | 0x80;
@@ -66,7 +71,7 @@ public:
         }
         if (a == 0x4016) { strobe = v & 1; if (strobe) shift = buttons; return; }
         if (a >= 0x6000 && a < 0x8000) { prgRam[a - 0x6000] = v; return; }
-        // $4000-$4013, $4015, $4017: APU (not implemented)
+        if ((a >= 0x4000 && a <= 0x4013) || a == 0x4015 || a == 0x4017) apu.write(a, v);
     }
 
 private:
