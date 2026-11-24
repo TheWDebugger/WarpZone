@@ -6,7 +6,7 @@
   },
   "id": "wdebugger.warp-zone",
   "name": "WarpZone",
-  "version": "v0.1.0",
+  "version": "v0.1.1",
   "developer": "WDebugger",
   "description": "Runs your own dumped Super Mario Bros. ROM inside Geometry Dash using a built-in NES emulator. No ROM is included; you must supply a .nes file.",
   "settings": {
