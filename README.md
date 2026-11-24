@@ -46,13 +46,9 @@ Verified in a standalone build (g++), not inside GD:
 - Fails `vbl_clear_time` (code $03): the PPU is ticked per CPU instruction, not per cycle, so cycle-exact vblank-clear timing is off. SMB1 doesn't depend on this.
 
 NOT verified:
-- **No actual SMB1 ROM was run** (none was available), so full-game behaviour is untested.
-- The Geode glue (`main.cpp`, `EmuLayer.hpp`) has never been compiled. Expect small API fixes on the first build (e.g. `keyDown/keyUp(enumKeyCodes, double)` signatures, file-picker types).
 - The CRC32 constants in `Rom.hpp` are from memory. If your valid dump is rejected, enable the "Skip ROM checksum" setting and tell me the real values.
 
 ## Not implemented
-
-- **Audio (APU).** The game runs silent. Audio output through GD's FMOD is the next step.
 - Touch controls (so no Android/iOS), mappers other than NROM, save states.
 - Cycle-exact PPU/CPU interleaving (see above).
 - Don't distribute ROMs with this mod.
