@@ -36,9 +36,9 @@ public:
         m_screen = CCSprite::create();
         m_screen->setAnchorPoint({0.5f, 0.5f});
         m_screen->setPosition(win / 2);
-        m_screen->setScale(win.height / 240.f);
         this->addChild(m_screen);
         upload();
+        fitScreen();
 
         this->setKeyboardEnabled(true);
         this->scheduleUpdate();
@@ -90,6 +90,15 @@ private:
         return b;
     }
 
+    // Scale the 256x240 picture so it exactly fills the screen height (square pixels, centered).
+    // kMargin < 1 leaves a little border; 1.0 is edge to edge.
+    void fitScreen() {
+        constexpr float kMargin = 1.0f;
+        auto win = CCDirector::get()->getWinSize();
+        auto sz = m_screen->getContentSize(); // in points, whatever the content scale factor is
+        if (sz.height > 0) m_screen->setScale(kMargin * win.height / sz.height);
+    }
+
     // Push the latest frame to the GPU. A fresh power-of-two texture each frame avoids raw GL
     // calls; the sprite releases the previous one when the new texture is set.
     void upload() {
@@ -98,7 +107,10 @@ private:
         tex->initWithData(m_buf.data(), kCCTexture2DPixelFormat_RGBA8888, 256, 256, CCSize(256, 256));
         tex->setAliasTexParameters(); // crisp pixels
         m_screen->setTexture(tex);
-        m_screen->setTextureRect(CCRect(0, 0, 256, 240));
+        // CCSprite rects are in points, not pixels: GD runs at a content scale factor of 2 or 4,
+        // so a "256x240" rect would otherwise cover 4x too much texture and shrink the picture.
+        float f = CCDirector::get()->getContentScaleFactor();
+        m_screen->setTextureRect(CCRect(0, 0, 256.f / f, 240.f / f));
         tex->release();
     }
 };
