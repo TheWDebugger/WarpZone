@@ -3,6 +3,7 @@
 #include <Geode/utils/file.hpp>
 #include <Geode/utils/async.hpp>
 #include "EmuLayer.hpp"
+#include "SelfTestSetting.hpp"
 
 using namespace geode::prelude;
 
