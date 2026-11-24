@@ -5,40 +5,29 @@ on:
   push:
     branches: [main]
 
-# The Windows build failed because the Geode SDK 4.0.0 pins {fmt} 11.0.2, which does not
-# compile with the very new Clang (23.x) on GitHub's runners. Two fixes are tried in
-# parallel so we find out which one works. Each job uploads its own artifact.
+# Builds against the Geode SDK version written in mod.json ("sdk: given"): 5.11.2, which
+# targets Geometry Dash 2.2081 and uses a recent {fmt}. (SDK 4.0.0 pins fmt 11.0.2, which
+# does not compile with the Clang that GitHub's runners now ship.)
 jobs:
-  windows-nightly-sdk:
-    name: Windows (nightly SDK)
-    runs-on: windows-latest
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: Windows
+            os: windows-latest
+          - name: macOS
+            os: macos-latest
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Build the mod
         id: build
         uses: geode-sdk/build-geode-mod@main
         with:
-          sdk: nightly
-          target: Win64
+          sdk: given
       - uses: actions/upload-artifact@v4
         with:
-          name: WarpZone-nightly-sdk
-          path: ${{ steps.build.outputs.build-output }}
-
-  windows-pinned-llvm:
-    name: Windows (LLVM 19, stable SDK)
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install an older Clang that works with fmt 11.0.2
-        shell: pwsh
-        run: choco install llvm --version=19.1.7 --allow-downgrade --force -y
-      - name: Build the mod
-        id: build
-        uses: geode-sdk/build-geode-mod@main
-        with:
-          target: Win64
-      - uses: actions/upload-artifact@v4
-        with:
-          name: WarpZone-llvm19
+          name: WarpZone-${{ matrix.config.name }}
           path: ${{ steps.build.outputs.build-output }}
